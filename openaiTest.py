@@ -7,6 +7,7 @@ from langchain.schema import (
 )
 
 
+
 langchain_messages = [
     SystemMessage(content="You are a helpful assistant."),
     HumanMessage(content="Knock knock."),
@@ -14,15 +15,14 @@ langchain_messages = [
     HumanMessage(content="Orange"),
 ]
 
-print(langchain_messages)
 
 langchinChat = ChatOpenAI(
     openai_api_key="sk-OAbZ2yRJdYz9KOC207C60e1644274dCbB029B417E246E851",
-    model='gpt-3.5-turbo'
+    model='gpt-3.5-turbo',
+    base_url="https://api3.apifans.com/v1"
 )
-print(langchinChat)
 
-res = langchinChat(langchain_messages)
 print('-------------------------------')
-print (res)
+res = langchinChat(langchain_messages)
+print (res.content)
 print('-------------------------------')
