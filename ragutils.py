@@ -24,18 +24,23 @@ class ChatGpt:
     def pushSystemMessage(self, content: str):
         self.msgs.append({'role':'system', 'content': content})
 
+
     def getGptMsg(self):
-        '''返回gpt的回复并自动加入当前对话列表'''
+        '''返回gpt的回复并自动加入当前对话列表（消耗tokens次数！别乱用）'''
         completion = self.client.chat.completions.create(
             messages=self.msgs,
             model="gpt-3.5-turbo-1106",
         )
         receiveMsg = completion.choices[0].message.content
-        self.msgs.append({'role':'system', 'content': receiveMsg})
+        self.pushSystemMessage(receiveMsg)
         return receiveMsg
 
     def deleteMessage(self):
         self.msgs.pop()
+        
+    def MessageHistory(self):
+        for msg in self.msgs:
+            print(msg['role'] + ': ' + msg['content'])
 
 class ragChat:
     def __init__(self) -> None:
@@ -44,3 +49,28 @@ class ragChat:
             model='gpt-3.5-turbo',
             base_url="https://api3.apifans.com/v1"
         )
+        self.msgs = []
+        self.roles = []
+    
+    def pushUserMessage(self, content: str):
+        self.msgs.append(HumanMessage(content=content))
+        self.roles.append('User')
+        
+    def pushSystemMessage(self, content: str):
+        self.msgs.append(AIMessage(content=content))
+        self.roles.append('AI')
+
+    def getGptMsg(self):
+        '''返回gpt的回复并自动加入当前对话列表（消耗tokens次数！别乱用）'''
+        receiveMsg = self.langchinChat(self.msgs).content
+        self.pushSystemMessage(receiveMsg)
+        return receiveMsg
+
+    def deleteMessage(self):
+        self.msgs.pop()
+
+    def MessageHistory(self):
+        i = 0
+        for msg in self.msgs:
+            print(self.roles[i] + ': ' + msg.content)
+            i += 1
