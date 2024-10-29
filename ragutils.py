@@ -29,7 +29,7 @@ class ChatGpt:
         '''返回gpt的回复并自动加入当前对话列表（消耗tokens次数！别乱用）'''
         completion = self.client.chat.completions.create(
             messages=self.msgs,
-            model="gpt-3.5-turbo-1106",
+            model="gpt-4o",
         )
         receiveMsg = completion.choices[0].message.content
         self.pushSystemMessage(receiveMsg)
@@ -46,7 +46,7 @@ class ragChat:
     def __init__(self) -> None:
         self.langchinChat = ChatOpenAI(
             openai_api_key="sk-OAbZ2yRJdYz9KOC207C60e1644274dCbB029B417E246E851",
-            model='gpt-3.5-turbo',
+            model='gpt-4o',
             base_url="https://api3.apifans.com/v1"
         )
         self.msgs = []
