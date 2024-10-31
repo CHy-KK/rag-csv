@@ -73,4 +73,5 @@ class ragChat:
         i = 0
         for msg in self.msgs:
             print(self.roles[i] + ': ' + msg.content)
+            print('*************************************************')
             i += 1
