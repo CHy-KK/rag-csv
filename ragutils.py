@@ -24,8 +24,14 @@ class ChatGpt:
     def pushSystemMessage(self, content: str):
         self.msgs.append({'role':'system', 'content': content})
 
-
     def getGptMsg(self):
+        '''返回gpt的回复（消耗tokens次数！别乱用）'''
+        return self.client.chat.completions.create(
+            messages=self.msgs,
+            model="gpt-4o",
+        ).choices[0].message.content
+
+    def getandpushGptMsg(self):
         '''返回gpt的回复并自动加入当前对话列表（消耗tokens次数！别乱用）'''
         completion = self.client.chat.completions.create(
             messages=self.msgs,
@@ -61,6 +67,10 @@ class ragChat:
         self.roles.append('AI')
 
     def getGptMsg(self):
+        '''返回gpt的回复（消耗tokens次数！别乱用）'''
+        return self.langchinChat(self.msgs).content
+
+    def getandpushGptMsg(self):
         '''返回gpt的回复并自动加入当前对话列表（消耗tokens次数！别乱用）'''
         receiveMsg = self.langchinChat(self.msgs).content
         self.pushSystemMessage(receiveMsg)
