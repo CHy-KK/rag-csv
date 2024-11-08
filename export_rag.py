@@ -63,9 +63,36 @@ def get_similar_prompts():
     # return jsonify([p.page_content for p in result])
     return jsonify(res)
 
+@app.route('/get_keywords', methods=['GET', 'POST'])
+def get_keywords():
+    global Part2Discription
+    query = request.form.get('prompt')
+    model_class = request.form.get('modelclass')
+    ragClient = ragChat()
+    print(Part2Discription[model_class])
+    prompt_template = f"""请基于以下内容回答问题，并返回对应的条目原文，不要翻译
+
+    内容:
+    {Part2Discription[model_class]}
+    query:
+    {query}
+    """
+    ragClient.pushUserMessage(prompt_template)
+    answer = ragClient.getGptMsg()
+    ragClient.clearHistory()
+    print (answer)
+
+
+
+    return jsonify(answer)
+
 
 
 if __name__ == '__main__':
+    global Part2Discription
+    Part2Discription = {}
+    with open('Part2Discription', 'r') as f:
+        Part2Discription = json.load(f)
     app.debug = True
     parser = argparse.ArgumentParser(description='Run Flask application.')
     parser.add_argument('-p', '--port', type=int, default=5000, help='Port to run the application')

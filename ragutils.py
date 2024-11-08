@@ -85,3 +85,7 @@ class ragChat:
             print(self.roles[i] + ': ' + msg.content)
             print('*************************************************')
             i += 1
+    
+    def clearHistory(self):
+        while (len(self.msgs)):
+            self.msgs.pop()
