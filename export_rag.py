@@ -53,15 +53,15 @@ def get_similar_prompts():
     query = request.form.get('prompt')
     model_class = request.form.get('modelclass')
     k = int(request.form.get('k'))
-    embed_model = OpenAIEmbeddings(base_url="https://api3.apifans.com/v1")
-    print (discription_filepath + '/' + model_class)
-    localvs = Chroma(persist_directory=discription_filepath + '/' + model_class, embedding_function=embed_model, collection_name="model_discription_embed")
-    result = localvs.similarity_search(query, k = k)
-    print (result)
-    res = [p.page_content for p in result[-5:]]
+    # embed_model = OpenAIEmbeddings(base_url="https://api3.apifans.com/v1")
+    # print (discription_filepath + '/' + model_class)
+    # localvs = Chroma(persist_directory=discription_filepath + '/' + model_class, embedding_function=embed_model, collection_name="model_discription_embed")
+    # result = localvs.similarity_search(query, k = k)
+    # print (result)
+    # res = [p.page_content for p in result[-5:]]
     
     # return jsonify([p.page_content for p in result])
-    return jsonify(res)
+    return jsonify('res')
 
 @app.route('/get_keywords', methods=['GET', 'POST'])
 def get_keywords():
@@ -77,14 +77,14 @@ def get_keywords():
     query:
     {query}
     """
-    ragClient.pushUserMessage(prompt_template)
-    answer = ragClient.getGptMsg()
-    ragClient.clearHistory()
-    print (answer)
+    # ragClient.pushUserMessage(prompt_template)
+    # answer = ragClient.getGptMsg()
+    # ragClient.clearHistory()
+    # print (answer)
 
 
 
-    return jsonify(answer)
+    return jsonify([])
 
 
 
