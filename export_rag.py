@@ -52,39 +52,44 @@ app.url_map.converters['re'] = RegexConverter
 def get_similar_prompts():
     query = request.form.get('prompt')
     model_class = request.form.get('modelclass')
+    model_class = 'airplane'
     k = int(request.form.get('k'))
-    # embed_model = OpenAIEmbeddings(base_url="https://api3.apifans.com/v1")
-    # print (discription_filepath + '/' + model_class)
-    # localvs = Chroma(persist_directory=discription_filepath + '/' + model_class, embedding_function=embed_model, collection_name="model_discription_embed")
-    # result = localvs.similarity_search(query, k = k)
-    # print (result)
-    # res = [p.page_content for p in result[-5:]]
+    embed_model = OpenAIEmbeddings(base_url="https://api3.apifans.com/v1")
+    print (discription_filepath + '/' + model_class)
+    localvs = Chroma(persist_directory=discription_filepath + '/' + model_class, embedding_function=embed_model, collection_name="model_discription_embed")
+    result = localvs.similarity_search(query, k = k)
+    print (result)
+    res = [p.page_content for p in result[-5:]]
     
-    # return jsonify([p.page_content for p in result])
-    return jsonify('res')
+    return jsonify([p.page_content for p in result])
+    # return jsonify('res')
 
 @app.route('/get_keywords', methods=['GET', 'POST'])
 def get_keywords():
     global Part2Discription
     query = request.form.get('prompt')
     model_class = request.form.get('modelclass')
+    model_class = 'airplane'
     ragClient = ragChat()
     print(Part2Discription[model_class])
-    prompt_template = f"""请基于以下内容回答问题，并返回对应的条目原文，不要翻译
+    prompt_template2 = f"""请基于以下数据库回答问题，该数据库为一个字典结构，键值为cap类物体拥有的部位名称，值为该部位可用的描述信息。你需要返回的内容格式为 {{\"answer\": \"...\", \"discription\": {{\"...\":[\"...\"], \"...\":[\"...\"], \"...\":[\"...\"]}}}}，\"answer\"为你对query的回答，\"discription\"为数据库中与query最相关的三个部位，每个部位提供三条描述内容，不要翻译。如果用户提问与物品部位与描述无关，则\"discription\"的值为空即可，以英文形式返回内容中原文，不要以代码形式返回
 
     内容:
     {Part2Discription[model_class]}
     query:
     {query}
     """
-    # ragClient.pushUserMessage(prompt_template)
-    # answer = ragClient.getGptMsg()
-    # ragClient.clearHistory()
-    # print (answer)
+    ragClient.pushUserMessage(prompt_template2)
+    answer = ragClient.getGptMsg()
 
 
 
-    return jsonify([])
+    ragClient.clearHistory()
+    print (answer)
+
+
+
+    return jsonify(answer)
 
 
 
